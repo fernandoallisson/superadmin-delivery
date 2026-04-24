@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# SuperAdmin Delivery - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Painel administrativo frontend para o backend multi-tenant de delivery, construído com React, TypeScript e Vite.
 
-Currently, two official plugins are available:
+## Tecnologias Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19 + TypeScript**: Para uma base de código robusta e moderna.
+- **Vite**: Build tool super rápido.
+- **Tailwind CSS**: Estilização utilitária e design system configurado para modo claro e escuro.
+- **React Router DOM**: Roteamento SPA.
+- **Zustand**: Gerenciamento de estado leve (utilizado para Auth).
+- **React Hook Form + Zod**: Gerenciamento e validação de formulários.
+- **TanStack Query (React Query)**: Fetching, caching e sincronização de dados.
+- **Axios**: Cliente HTTP configurado com interceptors para tokens JWT.
+- **Lucide React**: Ícones SVG elegantes.
+- **Componentes Customizados**: Baseados na filosofia do Shadcn/ui.
 
-## React Compiler
+## Estrutura de Diretórios
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── app/          # Configurações gerais da aplicação (rotas, providers)
+├── components/   # Componentes reutilizáveis
+│   ├── layout/   # Estruturas de página (Sidebar, Header, Layout)
+│   └── ui/       # Componentes visuais base (Button, Input, Table, etc.)
+├── features/     # Serviços de API agrupados por domínio (auth, stores, etc.)
+├── hooks/        # Hooks customizados (useAuth)
+├── lib/          # Utilitários e configurações (axios, utils do tailwind, auth)
+├── pages/        # Telas da aplicação
+└── ...
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Como Rodar o Projeto
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Instale as dependências:
+```bash
+npm install
 ```
+
+2. Crie um arquivo `.env` na raiz (se necessário), ou apenas confie no fallback para o localhost:
+```env
+VITE_API_URL=http://localhost:3010
+```
+
+3. Inicie o servidor de desenvolvimento:
+```bash
+npm run dev
+```
+
+4. Para gerar a build de produção:
+```bash
+npm run build
+```
+
+## Funcionalidades Implementadas
+
+- [x] Autenticação Completa (Login, Persistência de JWT, Logout, Interceptors).
+- [x] Proteção de Rotas (Redirecionamento se não autenticado).
+- [x] Layout Administrativo (Sidebar responsiva, Header, Breadcrumbs virtuais).
+- [x] Dashboard (Cards de estatísticas com placeholders para gráficos).
+- [x] Gerenciamento de Lojas (Listagem, Busca, Criação, Edição).
+- [x] Validação de formulários avançada com Zod.
+
+## Próximos Passos (Integrações Futuras)
+
+Para que o painel fique 100% aderente a todas as entidades do banco, os seguintes endpoints (presentes na coleção Postman mas que precisam de telas próprias) devem ser expandidos seguindo o mesmo padrão da feature `stores`:
+
+- **Usuários**: Listagem de administradores, operadores, entregadores, separadores e clientes. (`/users`)
+- **Categorias e Produtos**: Gerenciar catálogo de lojas específicas (`/categorias`, `/produtos`).
+- **Pedidos**: Visualizar fluxo e status dos pedidos (`/pedidos`).
+- **Financeiro**: Acompanhar transações e repasses (`/pagamentos`).
+- **Configurações**: Gerenciar taxas de entrega, horários de funcionamento, etc.
+
+*Dica: Utilize os componentes de `Table`, `Card`, e `Form` já construídos em `src/components/ui/` para manter o padrão visual e a consistência arquitetural.*
