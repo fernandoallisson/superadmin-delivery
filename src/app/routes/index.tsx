@@ -8,6 +8,10 @@ import StoreDetails from "../../pages/stores/StoreDetails";
 import UsuariosList from "../../pages/users/UsuariosList";
 import UsuarioForm from "../../pages/users/UsuarioForm";
 import UsuarioDetails from "../../pages/users/UsuarioDetails";
+import ProdutosList from "../../pages/produtos/ProdutosList";
+import ProdutoForm from "../../pages/produtos/ProdutoForm";
+import ProdutoDetails from "../../pages/produtos/ProdutoDetails";
+import ImportProdutos from "../../pages/produtos/ImportProdutos";
 
 export function AppRoutes() {
   return (
@@ -27,6 +31,13 @@ export function AppRoutes() {
         <Route path="users/new" element={<UsuarioForm />} />
         <Route path="users/:id" element={<UsuarioDetails />} />
         <Route path="users/:id/edit" element={<UsuarioForm />} />
+        
+        {/* Produtos */}
+        <Route path="products" element={<ProdutosList />} />
+        <Route path="products/new" element={<ProdutoForm />} />
+        <Route path="products/:id" element={<ProdutoDetails />} />
+        <Route path="products/:id/edit" element={<ProdutoForm />} />
+        <Route path="products/import" element={<ImportProdutos />} />
         
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

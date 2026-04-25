@@ -5,6 +5,7 @@ import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card";
 import { ArrowLeft, Edit, Store, Mail, Phone, Hash, Clock, DollarSign, Truck, FileText, Image } from "lucide-react";
 import { Badge } from "../../components/ui/badge";
+import ContasFinanceirasLoja from "./components/ContasFinanceirasLoja";
 
 export default function StoreDetails() {
   const { id } = useParams<{ id: string }>();
@@ -182,6 +183,10 @@ export default function StoreDetails() {
             </div>
           </CardContent>
         </Card>
+        {/* Contas Financeiras da Loja */}
+        <div className="md:col-span-2 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <ContasFinanceirasLoja lojaId={store.id} />
+        </div>
       </div>
     </div>
   );
