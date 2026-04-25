@@ -3,30 +3,42 @@ import { api } from "../../lib/api";
 export interface Store {
   id: string;
   nome: string;
+  razao_social?: string | null;
   cnpj: string;
-  email: string;
-  telefone: string;
-  status: "ativo" | "inativo" | "suspenso";
-  created_at?: string;
+  telefone?: string | null;
+  email?: string | null;
+  descricao?: string | null;
+  logo_url?: string | null;
+  status: "ativa" | "inativa";
+  horario_abertura?: string | null;
+  horario_fechamento?: string | null;
+  valor_minimo_pedido: number;
+  taxa_entrega_padrao: number;
+  criado_em?: string;
+  atualizado_em?: string;
 }
 
+export type StoreCreatePayload = Omit<Store, "id" | "criado_em" | "atualizado_em">;
+export type StoreUpdatePayload = Partial<StoreCreatePayload>;
+
 export const storeService = {
-  getAll: async (params?: { page?: number; limit?: number; search?: string }) => {
+  getAll: async (params?: { page?: number; limit?: number; search?: string; status?: string; nome?: string }) => {
     const response = await api.get("/lojas", { params });
     return response.data;
   },
   
   getById: async (id: string) => {
     const response = await api.get(`/lojas/${id}`);
-    return response.data;
+    // API retorna { success: true, data: {...} }
+    return response.data?.data ?? response.data;
   },
 
-  create: async (data: Partial<Store>) => {
+  create: async (data: StoreCreatePayload) => {
     const response = await api.post("/lojas", data);
     return response.data;
   },
 
-  update: async (id: string, data: Partial<Store>) => {
+  update: async (id: string, data: StoreUpdatePayload) => {
     const response = await api.put(`/lojas/${id}`, data);
     return response.data;
   },

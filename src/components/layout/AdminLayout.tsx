@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Outlet, Navigate, Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { authService } from "../../features/auth/authService";
-import { LayoutDashboard, Store, Users, ShoppingBag, LogOut, Tags, Settings, FileText, Banknote } from "lucide-react";
+import { LayoutDashboard, Store, Users, LogOut, Settings } from "lucide-react";
 import { Button } from "../ui/button";
 
 export default function AdminLayout() {
@@ -23,10 +23,6 @@ export default function AdminLayout() {
     { name: "Dashboard", path: "/", icon: LayoutDashboard },
     { name: "Lojas", path: "/stores", icon: Store },
     { name: "Usuários", path: "/users", icon: Users },
-    { name: "Categorias", path: "/categories", icon: Tags },
-    { name: "Produtos", path: "/products", icon: ShoppingBag },
-    { name: "Pedidos", path: "/orders", icon: FileText },
-    { name: "Financeiro", path: "/finance", icon: Banknote },
     { name: "Configurações", path: "/settings", icon: Settings },
   ];
 

@@ -4,6 +4,10 @@ import Login from "../../pages/auth/Login";
 import Dashboard from "../../pages/dashboard/Dashboard";
 import StoresList from "../../pages/stores/StoresList";
 import StoreForm from "../../pages/stores/StoreForm";
+import StoreDetails from "../../pages/stores/StoreDetails";
+import UsuariosList from "../../pages/users/UsuariosList";
+import UsuarioForm from "../../pages/users/UsuarioForm";
+import UsuarioDetails from "../../pages/users/UsuarioDetails";
 
 export function AppRoutes() {
   return (
@@ -12,11 +16,18 @@ export function AppRoutes() {
       <Route path="/" element={<AdminLayout />}>
         <Route index element={<Dashboard />} />
         
+        {/* Lojas */}
         <Route path="stores" element={<StoresList />} />
         <Route path="stores/new" element={<StoreForm />} />
+        <Route path="stores/:id" element={<StoreDetails />} />
         <Route path="stores/:id/edit" element={<StoreForm />} />
         
-        <Route path="users" element={<div>Listagem de Usuários</div>} />
+        {/* Usuários */}
+        <Route path="users" element={<UsuariosList />} />
+        <Route path="users/new" element={<UsuarioForm />} />
+        <Route path="users/:id" element={<UsuarioDetails />} />
+        <Route path="users/:id/edit" element={<UsuarioForm />} />
+        
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

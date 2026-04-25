@@ -13,13 +13,18 @@ import { ArrowLeft, Save } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const storeSchema = z.object({
-  nome: z.string().min(3, "O nome da loja é obrigatório"),
-  razao_social: z.string().optional(),
+  nome: z.string().min(3, "O nome da loja é obrigatório (mín. 3 caracteres)"),
+  razao_social: z.string().optional().or(z.literal("")),
   cnpj: z.string().min(14, "CNPJ inválido"),
-  telefone: z.string().min(10, "Telefone inválido"),
-  email: z.string().email("E-mail inválido"),
-  descricao: z.string().optional(),
-  status: z.enum(["ativo", "inativo", "suspenso"]).default("ativo"),
+  telefone: z.string().optional().or(z.literal("")),
+  email: z.string().email("E-mail inválido").optional().or(z.literal("")),
+  descricao: z.string().optional().or(z.literal("")),
+  logo_url: z.string().optional().or(z.literal("")),
+  status: z.enum(["ativa", "inativa"]).default("ativa"),
+  horario_abertura: z.string().optional().or(z.literal("")),
+  horario_fechamento: z.string().optional().or(z.literal("")),
+  valor_minimo_pedido: z.coerce.number().min(0, "Valor mínimo não pode ser negativo").default(0),
+  taxa_entrega_padrao: z.coerce.number().min(0, "Taxa não pode ser negativa").default(0),
 });
 
 type StoreFormValues = z.infer<typeof storeSchema>;
@@ -34,7 +39,9 @@ export default function StoreForm() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm<StoreFormValues>({
     resolver: zodResolver(storeSchema),
     defaultValues: {
-      status: "ativo"
+      status: "ativa",
+      valor_minimo_pedido: 0,
+      taxa_entrega_padrao: 0,
     }
   });
 
@@ -47,32 +54,50 @@ export default function StoreForm() {
   useEffect(() => {
     if (store && isEditing) {
       reset({
-        nome: store.nome,
-        cnpj: store.cnpj,
-        telefone: store.telefone,
-        email: store.email,
-        status: store.status as any,
+        nome: store.nome || "",
+        razao_social: store.razao_social || "",
+        cnpj: store.cnpj || "",
+        telefone: store.telefone || "",
+        email: store.email || "",
+        descricao: store.descricao || "",
+        logo_url: store.logo_url || "",
+        status: store.status as "ativa" | "inativa",
+        horario_abertura: store.horario_abertura || "",
+        horario_fechamento: store.horario_fechamento || "",
+        valor_minimo_pedido: Number(store.valor_minimo_pedido) || 0,
+        taxa_entrega_padrao: Number(store.taxa_entrega_padrao) || 0,
       });
     }
   }, [store, reset, isEditing]);
 
   const mutation = useMutation({
     mutationFn: (data: StoreFormValues) => {
-      if (isEditing) {
-        return storeService.update(id, data);
+      // Limpa campos vazios para enviar null ao backend
+      const payload: Record<string, any> = { ...data };
+      const optionalFields = ["razao_social", "telefone", "email", "descricao", "logo_url", "horario_abertura", "horario_fechamento"];
+      for (const field of optionalFields) {
+        if (payload[field] === "") {
+          payload[field] = null;
+        }
       }
-      return storeService.create(data);
+
+      if (isEditing) {
+        return storeService.update(id, payload);
+      }
+      return storeService.create(payload as any);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stores"] });
       navigate("/stores");
     },
     onError: (err: any) => {
-      setError(err.response?.data?.error || "Erro ao salvar loja.");
+      const msg = err.response?.data?.error?.message || err.response?.data?.error || err.response?.data?.message || "Erro ao salvar loja.";
+      setError(typeof msg === "string" ? msg : JSON.stringify(msg));
     }
   });
 
   const onSubmit = (data: StoreFormValues) => {
+    setError("");
     mutation.mutate(data);
   };
 
@@ -100,19 +125,20 @@ export default function StoreForm() {
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Informações Básicas</CardTitle>
-          <CardDescription>Dados principais de identificação da loja.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {error && (
-              <div className="p-3 text-sm text-red-500 bg-red-100/50 rounded-md">
-                {error}
-              </div>
-            )}
-            
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {error && (
+          <div className="p-3 text-sm text-red-500 bg-red-100/50 rounded-md">
+            {error}
+          </div>
+        )}
+
+        {/* Card 1: Informações Básicas */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Informações Básicas</CardTitle>
+            <CardDescription>Dados principais de identificação da loja.</CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="nome">Nome da Loja <span className="text-red-500">*</span></Label>
@@ -132,15 +158,14 @@ export default function StoreForm() {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="email">E-mail de Contato <span className="text-red-500">*</span></Label>
+                <Label htmlFor="email">E-mail de Contato</Label>
                 <Input id="email" type="email" placeholder="contato@comprebem.com" {...register("email")} className={errors.email ? "border-red-500" : ""} />
                 {errors.email && <span className="text-xs text-red-500">{errors.email.message}</span>}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="telefone">Telefone / WhatsApp <span className="text-red-500">*</span></Label>
-                <Input id="telefone" placeholder="(00) 00000-0000" {...register("telefone")} className={errors.telefone ? "border-red-500" : ""} />
-                {errors.telefone && <span className="text-xs text-red-500">{errors.telefone.message}</span>}
+                <Label htmlFor="telefone">Telefone / WhatsApp</Label>
+                <Input id="telefone" placeholder="(00) 00000-0000" {...register("telefone")} />
               </div>
 
               <div className="space-y-2">
@@ -150,36 +175,84 @@ export default function StoreForm() {
                   {...register("status")} 
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 >
-                  <option value="ativo">Ativo</option>
-                  <option value="inativo">Inativo</option>
-                  <option value="suspenso">Suspenso</option>
+                  <option value="ativa">Ativa</option>
+                  <option value="inativa">Inativa</option>
                 </select>
               </div>
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="space-y-2 border-t pt-4 mt-6">
-              <Label htmlFor="descricao">Descrição (Opcional)</Label>
-              <textarea 
-                id="descricao" 
-                rows={3}
-                placeholder="Breve descrição da loja..." 
-                {...register("descricao")}
-                className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-              />
-            </div>
+        {/* Card 2: Operação */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Configurações de Operação</CardTitle>
+            <CardDescription>Horários, taxas e valores mínimos.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="horario_abertura">Horário de Abertura</Label>
+                <Input id="horario_abertura" type="time" {...register("horario_abertura")} />
+              </div>
 
-            <div className="flex justify-end gap-2 pt-4">
-              <Link to="/stores">
-                <Button variant="outline" type="button">Cancelar</Button>
-              </Link>
-              <Button type="submit" disabled={mutation.isPending}>
-                <Save className="w-4 h-4 mr-2" />
-                {mutation.isPending ? "Salvando..." : "Salvar Loja"}
-              </Button>
+              <div className="space-y-2">
+                <Label htmlFor="horario_fechamento">Horário de Fechamento</Label>
+                <Input id="horario_fechamento" type="time" {...register("horario_fechamento")} />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="valor_minimo_pedido">Valor Mínimo do Pedido (R$)</Label>
+                <Input id="valor_minimo_pedido" type="number" step="0.01" min="0" placeholder="0.00" {...register("valor_minimo_pedido")} className={errors.valor_minimo_pedido ? "border-red-500" : ""} />
+                {errors.valor_minimo_pedido && <span className="text-xs text-red-500">{errors.valor_minimo_pedido.message}</span>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="taxa_entrega_padrao">Taxa de Entrega Padrão (R$)</Label>
+                <Input id="taxa_entrega_padrao" type="number" step="0.01" min="0" placeholder="0.00" {...register("taxa_entrega_padrao")} className={errors.taxa_entrega_padrao ? "border-red-500" : ""} />
+                {errors.taxa_entrega_padrao && <span className="text-xs text-red-500">{errors.taxa_entrega_padrao.message}</span>}
+              </div>
             </div>
-          </form>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        {/* Card 3: Complementar */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Informações Complementares</CardTitle>
+            <CardDescription>Logo e descrição da loja.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="logo_url">URL do Logo</Label>
+                <Input id="logo_url" type="url" placeholder="https://cdn.exemplo.com/logo.png" {...register("logo_url")} />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="descricao">Descrição</Label>
+                <textarea 
+                  id="descricao" 
+                  rows={3}
+                  placeholder="Breve descrição da loja..." 
+                  {...register("descricao")}
+                  className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="flex justify-end gap-2 pt-2">
+          <Link to="/stores">
+            <Button variant="outline" type="button">Cancelar</Button>
+          </Link>
+          <Button type="submit" disabled={mutation.isPending}>
+            <Save className="w-4 h-4 mr-2" />
+            {mutation.isPending ? "Salvando..." : "Salvar Loja"}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }

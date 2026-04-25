@@ -1,26 +1,33 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { storeService, type Store } from "../../features/stores/storeService";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Badge } from "../../components/ui/badge";
-import { Plus, Search, Edit, MoreHorizontal, Eye, Ban } from "lucide-react";
+import { Plus, Search, Edit, Eye, Trash2 } from "lucide-react";
 
 export default function StoresList() {
   const [searchTerm, setSearchTerm] = useState("");
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["stores"],
     queryFn: () => storeService.getAll(),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => storeService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["stores"] });
+    },
+  });
+
   const getStatusBadge = (status: string) => {
     switch(status) {
-      case "ativo": return <Badge variant="success">Ativo</Badge>;
-      case "inativo": return <Badge variant="secondary">Inativo</Badge>;
-      case "suspenso": return <Badge variant="destructive">Suspenso</Badge>;
+      case "ativa": return <Badge variant="success">Ativa</Badge>;
+      case "inativa": return <Badge variant="secondary">Inativa</Badge>;
       default: return <Badge variant="outline">{status}</Badge>;
     }
   };
@@ -32,6 +39,12 @@ export default function StoresList() {
     store.cnpj?.includes(searchTerm) ||
     store.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleDelete = (id: string, nome: string) => {
+    if (window.confirm(`Deseja realmente excluir a loja "${nome}"?`)) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -66,6 +79,7 @@ export default function StoresList() {
               <TableHead>Nome</TableHead>
               <TableHead>CNPJ</TableHead>
               <TableHead>Contato</TableHead>
+              <TableHead>Horário</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Ações</TableHead>
             </TableRow>
@@ -73,46 +87,68 @@ export default function StoresList() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   Carregando lojas...
                 </TableCell>
               </TableRow>
             ) : error ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-red-500">
+                <TableCell colSpan={6} className="text-center py-8 text-red-500">
                   Erro ao carregar lojas.
                 </TableCell>
               </TableRow>
             ) : filteredStores.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   Nenhuma loja encontrada.
                 </TableCell>
               </TableRow>
             ) : (
               filteredStores.map((store: Store) => (
                 <TableRow key={store.id}>
-                  <TableCell className="font-medium">{store.nome}</TableCell>
+                  <TableCell className="font-medium">
+                    <div>
+                      <span>{store.nome}</span>
+                      {store.razao_social && (
+                        <span className="block text-xs text-muted-foreground">{store.razao_social}</span>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>{store.cnpj}</TableCell>
                   <TableCell>
                     <div className="flex flex-col">
-                      <span className="text-sm">{store.email}</span>
-                      <span className="text-xs text-muted-foreground">{store.telefone}</span>
+                      <span className="text-sm">{store.email || "—"}</span>
+                      <span className="text-xs text-muted-foreground">{store.telefone || "—"}</span>
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm">
+                      {store.horario_abertura && store.horario_fechamento 
+                        ? `${store.horario_abertura} – ${store.horario_fechamento}`
+                        : "—"}
+                    </span>
                   </TableCell>
                   <TableCell>{getStatusBadge(store.status)}</TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="icon" title="Visualizar">
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                    <div className="flex justify-end gap-1">
+                      <Link to={`/stores/${store.id}`}>
+                        <Button variant="ghost" size="icon" title="Visualizar">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </Link>
                       <Link to={`/stores/${store.id}/edit`}>
                         <Button variant="ghost" size="icon" title="Editar">
                           <Edit className="h-4 w-4" />
                         </Button>
                       </Link>
-                      <Button variant="ghost" size="icon" title="Ações">
-                        <MoreHorizontal className="h-4 w-4" />
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        title="Excluir"
+                        onClick={() => handleDelete(store.id, store.nome)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-500" />
                       </Button>
                     </div>
                   </TableCell>
