@@ -24,7 +24,7 @@ export default function AdminLayout() {
     { name: "Lojas", path: "/stores", icon: Store },
     { name: "Usuários", path: "/users", icon: Users },
     { name: "Produtos", path: "/products", icon: Package },
-    { name: "Configurações", path: "/settings", icon: Settings },
+    { name: "Regras de Split", path: "/settings/split-rules", icon: Settings },
   ];
 
   return (

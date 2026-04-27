@@ -12,6 +12,8 @@ import ProdutosList from "../../pages/produtos/ProdutosList";
 import ProdutoForm from "../../pages/produtos/ProdutoForm";
 import ProdutoDetails from "../../pages/produtos/ProdutoDetails";
 import ImportProdutos from "../../pages/produtos/ImportProdutos";
+import RegrasSplitList from "../../pages/financial/RegrasSplitList";
+import RegraSplitForm from "../../pages/financial/RegraSplitForm";
 
 export function AppRoutes() {
   return (
@@ -38,6 +40,11 @@ export function AppRoutes() {
         <Route path="products/:id" element={<ProdutoDetails />} />
         <Route path="products/:id/edit" element={<ProdutoForm />} />
         <Route path="products/import" element={<ImportProdutos />} />
+        
+        {/* Financeiro / Regras de Split */}
+        <Route path="settings/split-rules" element={<RegrasSplitList />} />
+        <Route path="settings/split-rules/new" element={<RegraSplitForm />} />
+        <Route path="settings/split-rules/:id/edit" element={<RegraSplitForm />} />
         
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
