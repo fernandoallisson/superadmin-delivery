@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { usuarioService, PERFIS_OPTIONS, STATUS_OPTIONS } from "../../features/usuarios/usuarioService";
+import { usuarioService, PERFIS_OPTIONS } from "../../features/usuarios/usuarioService";
 import { storeService, type Store } from "../../features/stores/storeService";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { usuarioService, type Usuario, PERFIS_OPTIONS, STATUS_OPTIONS } from "../../features/usuarios/usuarioService";
+import { usuarioService, type Usuario, PERFIS_OPTIONS } from "../../features/usuarios/usuarioService";
 import { storeService, type Store } from "../../features/stores/storeService";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { Button } from "../../components/ui/button";
