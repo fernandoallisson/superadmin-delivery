@@ -23,7 +23,7 @@ export default function RegraSplitForm() {
 
   const { data: stores } = useQuery({
     queryKey: ["stores"],
-    queryFn: storeService.getAll,
+    queryFn: () => storeService.getAll(),
   });
 
   useEffect(() => {

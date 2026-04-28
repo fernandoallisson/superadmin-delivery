@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -21,9 +21,9 @@ const produtoSchema = z.object({
   marca: z.string().optional(),
   codigo_barras: z.string().optional(),
   unidade_medida: z.string().min(1, "Unidade de medida é obrigatória"),
-  vendavel_por_peso: z.boolean().default(false),
+  vendavel_por_peso: z.boolean(),
   imagem_url: z.string().url("URL de imagem inválida").optional().or(z.literal("")),
-  ativo: z.boolean().default(true),
+  ativo: z.boolean(),
 });
 
 type ProdutoFormValues = z.infer<typeof produtoSchema>;
@@ -107,7 +107,7 @@ export default function ProdutoForm() {
     },
   });
 
-  const onSubmit = (data: ProdutoFormValues) => {
+  const onSubmit: SubmitHandler<ProdutoFormValues> = (data) => {
     // limpar empty strings to nulls or undefined before send if needed
     mutation.mutate(data);
   };

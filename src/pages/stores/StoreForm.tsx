@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -20,11 +20,11 @@ const storeSchema = z.object({
   email: z.string().email("E-mail inválido").optional().or(z.literal("")),
   descricao: z.string().optional().or(z.literal("")),
   logo_url: z.string().optional().or(z.literal("")),
-  status: z.enum(["ativa", "inativa"]).default("ativa"),
+  status: z.enum(["ativa", "inativa"]),
   horario_abertura: z.string().optional().or(z.literal("")),
   horario_fechamento: z.string().optional().or(z.literal("")),
-  valor_minimo_pedido: z.coerce.number().min(0, "Valor mínimo não pode ser negativo").default(0),
-  taxa_entrega_padrao: z.coerce.number().min(0, "Taxa não pode ser negativa").default(0),
+  valor_minimo_pedido: z.number().min(0, "Valor mínimo não pode ser negativo"),
+  taxa_entrega_padrao: z.number().min(0, "Taxa não pode ser negativa"),
 });
 
 type StoreFormValues = z.infer<typeof storeSchema>;
@@ -203,13 +203,13 @@ export default function StoreForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="valor_minimo_pedido">Valor Mínimo do Pedido (R$)</Label>
-                <Input id="valor_minimo_pedido" type="number" step="0.01" min="0" placeholder="0.00" {...register("valor_minimo_pedido")} className={errors.valor_minimo_pedido ? "border-red-500" : ""} />
+                <Input id="valor_minimo_pedido" type="number" step="0.01" min="0" placeholder="0.00" {...register("valor_minimo_pedido", { valueAsNumber: true })} className={errors.valor_minimo_pedido ? "border-red-500" : ""} />
                 {errors.valor_minimo_pedido && <span className="text-xs text-red-500">{errors.valor_minimo_pedido.message}</span>}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="taxa_entrega_padrao">Taxa de Entrega Padrão (R$)</Label>
-                <Input id="taxa_entrega_padrao" type="number" step="0.01" min="0" placeholder="0.00" {...register("taxa_entrega_padrao")} className={errors.taxa_entrega_padrao ? "border-red-500" : ""} />
+                <Input id="taxa_entrega_padrao" type="number" step="0.01" min="0" placeholder="0.00" {...register("taxa_entrega_padrao", { valueAsNumber: true })} className={errors.taxa_entrega_padrao ? "border-red-500" : ""} />
                 {errors.taxa_entrega_padrao && <span className="text-xs text-red-500">{errors.taxa_entrega_padrao.message}</span>}
               </div>
             </div>
