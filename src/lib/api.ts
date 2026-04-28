@@ -3,9 +3,6 @@ import { getToken, removeToken } from "./auth";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "backend-node-with-ai-production.up.railway.app/api/",
-  headers: {
-    'ngrok-skip-browser-warning': 'true'
-  }
 });
 
 api.interceptors.request.use((config) => {
