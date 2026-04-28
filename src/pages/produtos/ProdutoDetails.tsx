@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -22,7 +22,7 @@ const variacaoSchema = z.object({
   sku: z.string().optional(),
   peso: z.number().min(0, "Peso não pode ser negativo"),
   quantidade_unidade: z.number().min(0, "Quantidade não pode ser negativa"),
-  ativa: z.boolean().default(true),
+  ativa: z.boolean(),
 });
 
 type VariacaoFormValues = z.infer<typeof variacaoSchema>;

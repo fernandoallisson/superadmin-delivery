@@ -22,7 +22,7 @@ export type StoreCreatePayload = Omit<Store, "id" | "criado_em" | "atualizado_em
 export type StoreUpdatePayload = Partial<StoreCreatePayload>;
 
 export const storeService = {
-  getAll: async (params?: { page?: number; limit?: number; search?: string; status?: string; nome?: string }) => {
+  getAll: async (params?: { page?: number; limit?: number; search?: string; status?: string; nome?: string }): Promise<any> => {
     const response = await api.get("/lojas", { params });
     return response.data;
   },

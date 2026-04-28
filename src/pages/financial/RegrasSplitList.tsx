@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { Plus, Settings2, Trash2, Edit } from "lucide-react";
+import { Plus, Trash2, Edit } from "lucide-react";
 import { regrasSplitService } from "../../features/regras_split/regrasSplitService";
 import { Button } from "../../components/ui/button";
 

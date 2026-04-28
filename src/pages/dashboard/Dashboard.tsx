@@ -241,7 +241,7 @@ export default function Dashboard() {
                     outerRadius={85} label={({ name }) => name} style={{ fontSize: 11 }}>
                     {formasPg.map((f, i) => <Cell key={i} fill={f.color} />)}
                   </Pie>
-                  <Tooltip formatter={(v: number) => fmt(v)} />
+                  <Tooltip formatter={(v: any) => fmt(v)} />
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>
@@ -267,7 +267,7 @@ export default function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => fmt(v)} stroke="hsl(var(--muted-foreground))" />
                   <YAxis type="category" dataKey="nome" width={120} tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-                  <Tooltip formatter={(v: number) => fmt(v)} />
+                  <Tooltip formatter={(v: any) => fmt(v)} />
                   <Bar dataKey="faturamento" fill="#6366f1" radius={[0, 6, 6, 0]} name="Faturamento" />
                 </BarChart>
               </ResponsiveContainer>

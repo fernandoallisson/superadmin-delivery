@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Plus, Trash2, ArrowLeft, Save } from "lucide-react";
 import { regrasSplitService, type RegraSplit, type RegraSplitDestinatario } from "../../features/regras_split/regrasSplitService";
@@ -114,7 +114,7 @@ export default function RegraSplitForm() {
                 disabled={isEditing}
               >
                 <option value="">Selecione a loja</option>
-                {(Array.isArray(stores?.data) ? stores.data : Array.isArray(stores) ? stores : [])?.map((store: any) => (
+                {(Array.isArray((stores as any)?.data) ? (stores as any).data : Array.isArray(stores) ? stores : [])?.map((store: any) => (
                   <option key={store.id} value={store.id}>
                     {store.nome}
                   </option>
