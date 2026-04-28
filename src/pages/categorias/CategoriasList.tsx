@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { categoriaService, type Categoria } from "../../features/categorias/categoriaService";
 import { Button } from "../../components/ui/button";
 import { 
-  Plus, Edit2, Trash2, Tag, 
+  Plus, Edit2, Trash2, 
   Search, Filter, CheckCircle, XCircle
 } from "lucide-react";
 import {

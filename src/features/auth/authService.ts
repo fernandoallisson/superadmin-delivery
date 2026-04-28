@@ -1,5 +1,4 @@
 import { api } from "../../lib/api";
-import { useAuth } from "../../hooks/useAuth";
 
 export const authService = {
   login: async (email: string, password: string) => {
