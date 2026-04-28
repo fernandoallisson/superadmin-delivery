@@ -19,9 +19,7 @@ const createSchema = z.object({
   email: z.string().email("E-mail inválido"),
   telefone: z.string().optional().or(z.literal("")),
   senha: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
-  perfil: z.enum(["administrador", "operador", "separador", "entregador", "financeiro"], {
-    required_error: "Selecione um perfil",
-  }),
+  perfil: z.enum(["administrador", "operador", "separador", "entregador", "financeiro"]),
   status: z.enum(["ativo", "inativo", "bloqueado"]).default("ativo"),
 });
 
@@ -30,9 +28,7 @@ const editSchema = z.object({
   nome: z.string().min(2, "Nome é obrigatório (mín. 2 caracteres)"),
   email: z.string().email("E-mail inválido"),
   telefone: z.string().optional().or(z.literal("")),
-  perfil: z.enum(["administrador", "operador", "separador", "entregador", "financeiro"], {
-    required_error: "Selecione um perfil",
-  }),
+  perfil: z.enum(["administrador", "operador", "separador", "entregador", "financeiro"]),
   status: z.enum(["ativo", "inativo", "bloqueado"]).default("ativo"),
 });
 
