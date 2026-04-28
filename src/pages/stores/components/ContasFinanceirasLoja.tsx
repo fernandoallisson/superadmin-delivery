@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Plus, Building2, User, Landmark, Wallet, MoreVertical, Edit, Trash2, CheckCircle2, XCircle, Loader2 } from "lucide-react";
@@ -33,8 +33,8 @@ const contaSchema = z.object({
   chave_pix: z.string().optional(),
   gateway: z.enum(["mercadopago", "nubank", "banco_manual", "outro"]).optional().or(z.literal("")),
   conta_gateway_id: z.string().optional(),
-  principal: z.boolean().default(false),
-  ativa: z.boolean().default(true),
+  principal: z.boolean(),
+  ativa: z.boolean(),
 });
 
 type ContaFormValues = z.infer<typeof contaSchema>;
@@ -167,7 +167,7 @@ export default function ContasFinanceirasLoja({ lojaId }: { lojaId: string }) {
     },
   });
 
-  const onSubmit = (data: ContaFormValues) => {
+  const onSubmit: SubmitHandler<ContaFormValues> = (data) => {
     saveMutation.mutate(data);
   };
 

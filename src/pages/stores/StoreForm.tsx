@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -96,7 +96,7 @@ export default function StoreForm() {
     }
   });
 
-  const onSubmit = (data: StoreFormValues) => {
+  const onSubmit: SubmitHandler<StoreFormValues> = (data) => {
     setError("");
     mutation.mutate(data);
   };
