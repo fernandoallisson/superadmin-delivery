@@ -6,6 +6,7 @@ export interface Categoria {
   slug: string;
   ordem_exibicao: number;
   ativa: boolean;
+  emoji: string | null;
   criado_em: string;
   atualizado_em: string;
 }
@@ -13,6 +14,22 @@ export interface Categoria {
 export const categoriaService = {
   getAll: async () => {
     const response = await api.get("/categorias");
+    return response.data;
+  },
+  getById: async (id: string) => {
+    const response = await api.get(`/categorias/${id}`);
+    return response.data;
+  },
+  create: async (data: Partial<Categoria>) => {
+    const response = await api.post("/categorias", data);
+    return response.data;
+  },
+  update: async (id: string, data: Partial<Categoria>) => {
+    const response = await api.put(`/categorias/${id}`, data);
+    return response.data;
+  },
+  delete: async (id: string) => {
+    const response = await api.delete(`/categorias/${id}`);
     return response.data;
   },
 };

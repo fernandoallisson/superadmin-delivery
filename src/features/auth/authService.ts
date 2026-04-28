@@ -3,7 +3,7 @@ import { useAuth } from "../../hooks/useAuth";
 
 export const authService = {
   login: async (email: string, password: string) => {
-    const response = await api.post("/auth/login", { email, password });
+    const response = await api.post("/auth/login", { email, password, userType: 'superadmin' });
     return response.data;
   },
   me: async () => {
