@@ -57,10 +57,14 @@ export default function UsuariosList() {
   };
 
   // Build store name lookup
-  const storesArr: Store[] = Array.isArray(storesData?.data) ? storesData.data : (Array.isArray(storesData) ? storesData : []);
+  const storesArr: Store[] = Array.isArray(storesData?.data?.data) 
+    ? storesData.data.data 
+    : (Array.isArray(storesData?.data) ? storesData.data : (Array.isArray(storesData) ? storesData : []));
   const storeMap = new Map(storesArr.map((s: Store) => [s.id, s.nome]));
 
-  const usuarios: Usuario[] = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
+  const usuarios: Usuario[] = Array.isArray(data?.data?.data) 
+    ? data.data.data 
+    : (Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []));
 
   const filteredUsuarios = usuarios.filter((u: Usuario) =>
     u.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||

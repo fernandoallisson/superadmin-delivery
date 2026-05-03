@@ -24,28 +24,27 @@ export type StoreUpdatePayload = Partial<StoreCreatePayload>;
 export const storeService = {
   getAll: async (params?: { page?: number; limit?: number; search?: string; status?: string; nome?: string }): Promise<any> => {
     const response = await api.get("/lojas", { params });
-    return response.data;
+    return response.data?.data ?? response.data;
   },
   
   getById: async (id: string) => {
     const response = await api.get(`/lojas/${id}`);
-    // API retorna { success: true, data: {...} }
     return response.data?.data ?? response.data;
   },
 
   create: async (data: StoreCreatePayload) => {
     const response = await api.post("/lojas", data);
-    return response.data;
+    return response.data?.data ?? response.data;
   },
 
   update: async (id: string, data: StoreUpdatePayload) => {
     const response = await api.put(`/lojas/${id}`, data);
-    return response.data;
+    return response.data?.data ?? response.data;
   },
 
   updateStatus: async (id: string, status: string) => {
     const response = await api.patch(`/lojas/${id}/status`, { status });
-    return response.data;
+    return response.data?.data ?? response.data;
   },
 
   delete: async (id: string) => {

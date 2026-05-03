@@ -44,7 +44,7 @@ export const STATUS_OPTIONS = [
 export const usuarioService = {
   getAll: async (params?: { loja_id?: string; status?: string; perfil?: string; nome?: string; email?: string }) => {
     const response = await api.get("/usuarios", { params });
-    return response.data;
+    return response.data?.data ?? response.data;
   },
 
   getById: async (id: string) => {

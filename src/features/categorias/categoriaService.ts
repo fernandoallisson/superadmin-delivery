@@ -14,11 +14,11 @@ export interface Categoria {
 export const categoriaService = {
   getAll: async () => {
     const response = await api.get("/categorias");
-    return response.data;
+    return response.data?.data ?? response.data;
   },
   getById: async (id: string) => {
     const response = await api.get(`/categorias/${id}`);
-    return response.data;
+    return response.data?.data ?? response.data;
   },
   create: async (data: Partial<Categoria>) => {
     const response = await api.post("/categorias", data);

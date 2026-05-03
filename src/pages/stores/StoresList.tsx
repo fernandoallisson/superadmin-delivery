@@ -32,7 +32,9 @@ export default function StoresList() {
     }
   };
 
-  const stores = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
+  const stores = Array.isArray(data?.data?.data) 
+    ? data.data.data 
+    : (Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []));
 
   const filteredStores = stores.filter((store: Store) => 
     store.nome?.toLowerCase().includes(searchTerm.toLowerCase()) || 

@@ -19,12 +19,12 @@ export interface Produto {
 export const produtoService = {
   getAll: async (params?: Record<string, any>) => {
     const response = await api.get("/produtos", { params });
-    return response.data;
+    return response.data?.data ?? response.data;
   },
 
   getById: async (id: string) => {
     const response = await api.get(`/produtos/${id}`);
-    return response.data;
+    return response.data?.data ?? response.data;
   },
 
   create: async (data: Partial<Produto>) => {

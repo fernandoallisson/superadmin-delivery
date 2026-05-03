@@ -47,7 +47,7 @@ export default function ProdutoDetails() {
     enabled: !!id,
   });
 
-  const produto = produtoData?.data;
+  const produto = produtoData;
   const variacoes: VariacaoProduto[] = Array.isArray(variacoesData?.data) ? variacoesData.data : (Array.isArray(variacoesData) ? variacoesData : []);
 
   // Mutations

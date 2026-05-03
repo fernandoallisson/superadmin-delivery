@@ -32,7 +32,11 @@ export default function CategoriasList() {
     queryFn: categoriaService.getAll,
   });
 
-  const categorias = categoriesData?.data || [];
+  const categorias = Array.isArray(categoriesData?.data?.data) 
+    ? categoriesData.data.data
+    : (Array.isArray(categoriesData?.data) 
+      ? categoriesData.data 
+      : (Array.isArray(categoriesData) ? categoriesData : []));
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => categoriaService.delete(id),

@@ -24,7 +24,9 @@ export default function ProdutosList() {
     queryFn: () => produtoService.getAll(),
   });
 
-  const produtos: Produto[] = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
+  const produtos: Produto[] = Array.isArray(data?.data?.data) 
+    ? data.data.data 
+    : (Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []));
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => produtoService.delete(id),

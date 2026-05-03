@@ -38,7 +38,9 @@ export default function ProdutoForm() {
     queryKey: ["categorias"],
     queryFn: () => categoriaService.getAll(),
   });
-  const categorias: Categoria[] = Array.isArray(categoriasData?.data) ? categoriasData.data : [];
+  const categorias: Categoria[] = Array.isArray(categoriasData?.data?.data) 
+    ? categoriasData.data.data 
+    : (Array.isArray(categoriasData?.data) ? categoriasData.data : (Array.isArray(categoriasData) ? categoriasData : []));
 
   const { data: produtoData, isLoading: isLoadingProduto } = useQuery({
     queryKey: ["produto", id],
@@ -63,19 +65,19 @@ export default function ProdutoForm() {
   });
 
   useEffect(() => {
-    if (isEditing && produtoData?.data) {
-      const p = produtoData.data;
+    if (isEditing && produtoData) {
+      const p = produtoData;
       reset({
-        nome: p.nome,
-        slug: p.slug,
-        categoria_id: p.categoria_id,
+        nome: p.nome || "",
+        slug: p.slug || "",
+        categoria_id: p.categoria_id || "",
         descricao: p.descricao || "",
         marca: p.marca || "",
         codigo_barras: p.codigo_barras || "",
-        unidade_medida: p.unidade_medida,
-        vendavel_por_peso: p.vendavel_por_peso,
+        unidade_medida: p.unidade_medida || "unidade",
+        vendavel_por_peso: p.vendavel_por_peso ?? false,
         imagem_url: p.imagem_url || "",
-        ativo: p.ativo,
+        ativo: p.ativo ?? true,
       });
     }
   }, [isEditing, produtoData, reset]);

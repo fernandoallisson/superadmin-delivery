@@ -11,6 +11,10 @@ export default function RegrasSplitList() {
     queryFn: regrasSplitService.getAll,
   });
 
+  const regrasList = Array.isArray(regras?.data?.data) 
+    ? regras.data.data 
+    : (Array.isArray(regras?.data) ? regras.data : (Array.isArray(regras) ? regras : []));
+
   const handleDelete = async (id: string) => {
     if (confirm("Tem certeza que deseja excluir esta regra de split?")) {
       await regrasSplitService.delete(id);
@@ -52,14 +56,14 @@ export default function RegrasSplitList() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-              {regras?.length === 0 && (
+              {regrasList.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
                     Nenhuma regra de split configurada.
                   </td>
                 </tr>
               )}
-              {regras?.map((regra) => (
+              {regrasList.map((regra) => (
                 <tr key={regra.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="font-medium text-slate-900 dark:text-white">

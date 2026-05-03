@@ -27,23 +27,23 @@ export interface RegraSplit {
 
 export const regrasSplitService = {
   getAll: async () => {
-    const { data } = await api.get<RegraSplit[]>("/regras_split");
-    return data;
+    const response = await api.get("/regras_split");
+    return response.data?.data ?? response.data;
   },
 
   getById: async (id: string) => {
-    const { data } = await api.get<RegraSplit>(`/regras_split/${id}`);
-    return data;
+    const response = await api.get(`/regras_split/${id}`);
+    return response.data?.data ?? response.data;
   },
 
   create: async (payload: RegraSplit) => {
-    const { data } = await api.post<RegraSplit>("/regras_split", payload);
-    return data;
+    const response = await api.post("/regras_split", payload);
+    return response.data?.data ?? response.data;
   },
 
   update: async (id: string, payload: Partial<RegraSplit>) => {
-    const { data } = await api.put<RegraSplit>(`/regras_split/${id}`, payload);
-    return data;
+    const response = await api.put(`/regras_split/${id}`, payload);
+    return response.data?.data ?? response.data;
   },
 
   delete: async (id: string) => {
