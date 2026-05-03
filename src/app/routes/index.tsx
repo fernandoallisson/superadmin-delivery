@@ -16,6 +16,7 @@ import CategoriasList from "../../pages/categorias/CategoriasList";
 import RegrasSplitList from "../../pages/financial/RegrasSplitList";
 import RegraSplitForm from "../../pages/financial/RegraSplitForm";
 import { MercadoPagoTest } from "../../pages/financial/MercadoPagoTest";
+import AuditLogs from "../../pages/settings/AuditLogs";
 
 export function AppRoutes() {
   return (
@@ -49,6 +50,7 @@ export function AppRoutes() {
         <Route path="settings/split-rules/new" element={<RegraSplitForm />} />
         <Route path="settings/split-rules/:id/edit" element={<RegraSplitForm />} />
         <Route path="settings/mercadopago-test" element={<MercadoPagoTest />} />
+        <Route path="audit-logs" element={<AuditLogs />} />
         
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
